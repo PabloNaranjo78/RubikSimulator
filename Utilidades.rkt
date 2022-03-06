@@ -71,3 +71,37 @@
 ;         (cons ult (rotar-centro-aux pos (cdr lista) newL (+ cont 1))))
 ;        (else
 ;        (cons (car(car lista))(rotar-centro-aux pos (cdr lista) newL (+ cont 1))))))
+
+(define (aplastar lista)
+  (cond ((null? lista)
+         '())
+        ((list? lista)
+         (list (aplastar (car lista)) (aplastar (cdr lista)) ))
+        (else
+         (lista)))
+  )
+
+(define (concatenar_listas lista1 lista2)
+  (if (and (null? lista1) (null? lista2))
+      '()
+      (if (not (null? lista1))
+          (cons (car lista1) (concatenar_listas (cdr lista1) lista2))
+          (if (not (null? lista2))
+              (cons (car lista2) (concatenar_listas lista1 (cdr lista2)))
+              '()
+              )
+          )
+      )
+  )
+
+
+(define (aplanar lista)
+  (if (null? lista)
+      '()
+      (if (list? (car lista))
+          (concatenar_listas (aplanar (car lista)) (aplanar (cdr lista)))
+          (concatenar_listas (list (car lista)) (aplanar (cdr lista)))
+          )
+      )
+  )
+
