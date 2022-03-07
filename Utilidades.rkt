@@ -49,29 +49,6 @@
          (append (invertir (cdr lista))
                  (list (car lista))))))
 
-;Rotar una cara del cubo
-;(define (rotarF matriz cara) ;cara = cual de todas las caras
-;  (rotarF-aux matriz cara dir 1))
-
-;(define (rotarF-aux matriz cara dir cont)
-;  ())
-
-;Invertir la lista y luego aplicar car car car
-
-
-;Sustituir un elemento de una lista
-;(define (rotar-centro cubo pos dir)
-;  (fila-aux cubo pos dir (ultimo (elemento 1 cubo))
-;            (elemento pos (elemento 1 cubo)) 1));num = numero de fila, ult = ultimo, pri = primero
-;
-;(define (rotar-centro-aux cubo pos dir ult pri cont)
-;  (cond ((= cont 5)
-;         (display "termina el ciclo"))
-;        ((equal? cont cont)
-;         (cons ult (rotar-centro-aux pos (cdr lista) newL (+ cont 1))))
-;        (else
-;        (cons (car(car lista))(rotar-centro-aux pos (cdr lista) newL (+ cont 1))))))
-
 (define (aplastar lista)
   (cond ((null? lista)
          '())
@@ -105,3 +82,56 @@
       )
   )
 
+;Validacion fila/columna
+(define (fil-col? X Cubo Movs) ;fil-col = fila o columna
+  (cond ((or(< X 2)(> X 6))
+         (display "El numero ingresado esta fuera del rango"))
+        ((or (not(list? Cubo))(null? Cubo))
+         (display "El parametro Cubo, no es una lista o esta vacia"))
+        ((or (not (list? Movs))(null? Movs))
+         (display "El parametro Movs, no es una lista o esta vacia"))
+        (else
+         (fila-col?-aux X Cubo Movs))))
+
+;La funcion contiene verifica si es fila o columna y su direccion
+(define (contiene ele comp1 comp2)
+  (and (= (largo(string->list(symbol->string ele))) 3) (equal? comp1 (string (car(string->list(symbol->string ele)))))
+              (equal? comp2 (string (car(cddr(string->list(symbol->string ele))))))))
+
+;Separacion de las intrucciones 
+(define (fila-col?-aux X Cubo Movs)
+  (cond ((contiene (car Movs) "F" "D")
+         (display "SI"))
+        ((contiene (car Movs) "F" "I")
+         (display "SI"))
+        ((contiene (car Movs) "C" "A")
+         (display "CC"))
+        ((contiene (car Movs) "C" "B")
+         (display "DD"))
+        (else
+         (display "Instruccion incorrecta"))))
+
+;Validacion del numero de fila
+(define (fila-der X Cubo Movs) ;fila-der = fila derecha
+  (cond ((equal? X 2)
+         (display "Funcion maximos"))
+        (else
+         (fila-der-aux X Cubo Movs))))
+
+;Fila central(hacia la derecha) para cualquier cubo 3x3 o mayor
+(define (fila-der-aux X Cubo Movs)
+  (and (> 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))
+                    (< X (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))))
+
+;Sustituir un elemento de una lista
+;(define (rotar-centro cubo pos dir)
+;  (fila-aux cubo pos dir (ultimo (elemento 1 cubo))
+;            (elemento pos (elemento 1 cubo)) 1));num = numero de fila, ult = ultimo, pri = primero
+
+;(define (rotar-centro-aux cubo pos dir ult pri cont)
+;  (cond ((= cont 5)
+;         (display "termina el ciclo"))
+;        ((equal? cont cont)
+;         (cons ult (rotar-centro-aux pos (cdr lista) newL (+ cont 1))))
+;        (else
+;        (cons (car(car lista))(rotar-centro-aux pos (cdr lista) newL (+ cont 1))))))
