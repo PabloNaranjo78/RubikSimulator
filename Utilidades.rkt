@@ -1,4 +1,7 @@
 #lang scheme
+(provide elemento)
+(provide largo)
+
 ;Largo de una lista
 (define (largo lista)
   (cond ((null? lista)
