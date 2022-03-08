@@ -1,6 +1,31 @@
 #lang scheme
 (provide elemento)
 (provide largo)
+(provide fil-col?)
+
+(define matriz '( ( (A A A)
+            (A A A)
+            (A A A) )
+
+          ( (B B B)
+            (B B B)
+            (B B B) )
+
+          ( (V V V)
+            (V V V)
+            (V V V) ) 
+
+          ( (Y Y Y) 
+            (Y Y Y)
+            (Y Y Y) ) 
+
+          ( (R R R) 
+            (R R R)
+            (R R R) )
+
+          ( (N N N)
+            (N N N) 
+            (N N N) ) ))
 
 ;Largo de una lista
 (define (largo lista)
@@ -104,40 +129,59 @@
 ;Separacion de las intrucciones 
 (define (fila-col?-aux X Cubo Movs)
   (cond ((contiene (car Movs) "F" "D")
-         (display "SI"))
+         (tamano-cubo X Cubo Movs "D"))
         ((contiene (car Movs) "F" "I")
-         (display "SI"))
+         (tamano-cubo X Cubo Movs "I"))
         ((contiene (car Movs) "C" "A")
-         (display "CC"))
+         (tamano-cubo X Cubo Movs "A"))
         ((contiene (car Movs) "C" "B")
-         (display "DD"))
+         (tamano-cubo X Cubo Movs "B"))
         (else
          (display "Instruccion incorrecta"))))
 
 ;Validacion del tamaño del cubo
 (define (tamano-cubo X Cubo Movs dir) ;fila-der = fila derecha
   (cond ((equal? X 2)
-         (display "Funcion maximos"))
+         (rotarIzquierdaMatriz matriz))
         (else
-         (fila-der-aux X Cubo Movs dir))))
+         (verificar-centro X Cubo Movs dir))))
 
 ;Fila central(hacia la derecha) para cualquier cubo 3x3 o mayor
-(define (fila-der-aux X Cubo Movs dir)
+(define (verificar-centro X Cubo Movs dir)
   (cond ((and (> 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))
                     (< X (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))))
-        (rotar-centro X Cubo Movs dir)
+        (actualizar-fila Cubo (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) 1
+                         (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))) ;rotar-centro X Cubo Movs dir
   (else
-   (extremos X Cubo Movs dir))))
+   (esquinas X Cubo Movs dir))))
 
-(define (extremos X Cubo Movs dir)
+;
+(define (actualizar-fila Cubo fila cont Movs primero)
+  (cond ((= cont 4)
+         (println (list cont fila primero))
+         (cambiar-fila cont fila Cubo primero)
+         (println (cambiar-fila cont fila Cubo primero))) ;cambiar-fila cont fila Cubo
+        (else
+         (actualizar-fila-aux Cubo fila cont Movs primero))))
+
+(define (actualizar-fila-aux Cubo fila cont Movs primero)
+          (actualizar-fila (cambiar-fila cont fila Cubo
+                                         (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento (+ 1 cont) Cubo)))
+                           fila (+ 1 cont) Movs primero))
+
+(define (cambiar-fila cara fila Cubo newfila)
+  (sus cara Cubo (sus fila (elemento cara Cubo) newfila))) 
+
+;
+(define (esquinas X Cubo Movs dir)
   (cond ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "D"))
-         ("Funcion para rotar los bordes"))
+         (rotarDerechaMatriz matriz))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "I"))
-         ("Funcion para rotar los bordes 3 veces derecha"))
+         (rotarIzquierdaMatriz matriz))
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "D"))
-         ("Funcion para rotar los bordes"))
+         (rotarDerechaMatriz matriz))
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "I"))
-         ("Funcion para rotar los bordes 3 veces derecha"))
+         (rotarIzquierdaMatriz matriz))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "A"))
          ("Funcion para rotar bordes arriba"))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "B"))
@@ -148,19 +192,6 @@
          ("Funcion para rotar bordes arriba 3 veces"))
         (else
          (display "HUBO UN ERROR"))))
-
-;Sustituir un elemento de una lista
-;(define (rotar-centro X Cubo Movs dir)
-;  (fila-aux cubo pos dir (ultimo (elemento 1 cubo))
-;            (elemento pos (elemento 1 cubo)) 1));num = numero de fila, ult = ultimo, pri = primero
-
-;(define (rotar-centro-aux cubo pos dir ult pri cont)
-;  (cond ((= cont 5)
-;         (display "termina el ciclo"))
-;        ((equal? cont cont)
-;         (cons ult (rotar-centro-aux pos (cdr lista) newL (+ cont 1))))
-;        (else
-;        (cons (car(car lista))(rotar-centro-aux pos (cdr lista) newL (+ cont 1))))))
 
 (define (rotarIzquierdaMatriz matriz)
   (rotarDerechaMatriz(rotarDerechaMatriz(rotarDerechaMatriz matriz))))
@@ -180,3 +211,4 @@
   (cond  ((> cont tam) '())
          (else
            (cons (elemento N (elemento cont matrix)) (subElementoN-aux matrix N (+ 1 cont) tam) ))))
+

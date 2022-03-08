@@ -5,7 +5,7 @@
 (define (RS Tam Matriz Movs)
   (cond
     ;Condicion para verificar correcta cantidad de caras (6)
-    ((and (equal? (largo Matriz) 6)  (lenFilCol Tam Matriz 1 1))  (display "ciclo terminado"))  ;"Funcion de Movs"))
+    ((and (equal? (largo Matriz) 6)  (lenFilCol Tam Matriz 1 1) (verificarMovs Tam Movs)) (fil-col? Tam Matriz Movs))
     (else
      (display "error"))))
 
@@ -22,16 +22,23 @@
     ((equal? (largo(elemento cont (elemento cont2 Matriz))) Tam) (lenFilCol Tam Matriz (+ 1 cont ) cont2))
   (else #f)))
 
-   
-;(largo (elemento cont1 (elemento 1 Matriz)))        
-;(define (lenCol Tam Matriz cont) 
- ; (cond
- ;   [(empty? (elemento2 0 Matriz)) #t]
-  ;  [else (+ (elemento2 0 Matriz) ( lenCol(rest '(elemento2 0 Matriz))))]))
-                                                                                       
+(define (verificarMovs Tam Movs)
+  (cond
+    ((null? Movs)#t)
+    (else
+     (verificarMovs-aux Tam Movs)
+     )))
 
-
-
+(define (verificarMovs-aux Tam Movs)
+  (cond
+    ((and
+      (<= (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) Tam)
+      (>=  (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) 1)
+     (= (string-length (symbol->string (car Movs))) 3))
+     (verificarMovs Tam (cdr Movs)))
+    (else #f)))
+    
+                
 
 
 
