@@ -138,3 +138,22 @@
 ;         (cons ult (rotar-centro-aux pos (cdr lista) newL (+ cont 1))))
 ;        (else
 ;        (cons (car(car lista))(rotar-centro-aux pos (cdr lista) newL (+ cont 1))))))
+
+(define (rotarIzquierdaMatriz matriz)
+  (rotarDerechaMatriz(rotarDerechaMatriz(rotarDerechaMatriz matriz))))
+
+(define (rotarDerechaMatriz matriz)
+  (rotarDerechaMatriz-aux matriz 1 (largo matriz)))
+
+(define (rotarDerechaMatriz-aux matriz cont tam)
+  (cond ((> cont tam) '())
+        (else
+         (cons (subElementoN matriz cont) (rotarDerechaMatriz-aux matriz (+ 1 cont) tam)))))
+
+(define (subElementoN matriz N)
+  (subElementoN-aux (invertir matriz) N 1 (largo matriz)))
+
+(define (subElementoN-aux matrix N cont tam)
+  (cond  ((> cont tam) '())
+         (else
+           (cons (elemento N (elemento cont matrix)) (subElementoN-aux matrix N (+ 1 cont) tam) ))))
