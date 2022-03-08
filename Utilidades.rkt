@@ -114,20 +114,43 @@
         (else
          (display "Instruccion incorrecta"))))
 
-;Validacion del numero de fila
-(define (fila-der X Cubo Movs) ;fila-der = fila derecha
+;Validacion del tamaño del cubo
+(define (tamano-cubo X Cubo Movs dir) ;fila-der = fila derecha
   (cond ((equal? X 2)
          (display "Funcion maximos"))
         (else
-         (fila-der-aux X Cubo Movs))))
+         (fila-der-aux X Cubo Movs dir))))
 
 ;Fila central(hacia la derecha) para cualquier cubo 3x3 o mayor
-(define (fila-der-aux X Cubo Movs)
-  (and (> 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))
+(define (fila-der-aux X Cubo Movs dir)
+  (cond ((and (> 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))
                     (< X (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))))
+        (rotar-centro X Cubo Movs dir)
+  (else
+   (extremos X Cubo Movs dir))))
+
+(define (extremos X Cubo Movs dir)
+  (cond ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "D"))
+         ("Funcion para rotar los bordes"))
+        ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "I"))
+         ("Funcion para rotar los bordes 3 veces derecha"))
+        ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "D"))
+         ("Funcion para rotar los bordes"))
+        ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "I"))
+         ("Funcion para rotar los bordes 3 veces derecha"))
+        ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "A"))
+         ("Funcion para rotar bordes arriba"))
+        ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "B"))
+         ("Funcion para rotar bordes arriba 3 veces"))
+        ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "A"))
+         ("Funcion para rotar bordes arriba"))
+        ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "B"))
+         ("Funcion para rotar bordes arriba 3 veces"))
+        (else
+         (display "HUBO UN ERROR"))))
 
 ;Sustituir un elemento de una lista
-;(define (rotar-centro cubo pos dir)
+;(define (rotar-centro X Cubo Movs dir)
 ;  (fila-aux cubo pos dir (ultimo (elemento 1 cubo))
 ;            (elemento pos (elemento 1 cubo)) 1));num = numero de fila, ult = ultimo, pri = primero
 
