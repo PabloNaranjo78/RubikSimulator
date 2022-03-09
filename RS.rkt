@@ -1,11 +1,11 @@
 #lang scheme
 
 (require "Utilidades.rkt")
-
+(require "GUI.rkt")
 (define (RS Tam Matriz Movs)
   (cond
     ;Condicion para verificar correcta cantidad de caras (6)
-    ((and (equal? (largo Matriz) 6)  (lenFilCol Tam Matriz 1 1) (verificarMovs Tam Movs)) (fil-col? Tam Matriz Movs))
+    ((and (equal? (largo Matriz) 6)  (lenFilCol Tam Matriz 1 1) (verificarMovs Tam Movs)) (iniciar Tam Matriz Movs))
     (else
      (display "error"))))
 

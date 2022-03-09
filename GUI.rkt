@@ -60,15 +60,15 @@
 (define movX 1)
 (define movY #t)
 
-(define (iniciar num matriz)
+(define (iniciar num matriz movs)
    
   (pintarCaras matriz num)
   (repintarLineas num)
-  (click num matriz)
+  (click num matriz movs)
  
   )
 
-(define (click num matriz)
+(define (click num matriz movs)
   (cond
     (((get-mouse-click ventana)
       (cond ((and (> ( posn-x (query-mouse-posn ventana)) 91) (> ( posn-y (query-mouse-posn ventana)) 150)
@@ -99,7 +99,7 @@
       (pintarCaras matriz num)
       (println (list movX movY))
       (repintarLineas num)
-      (click num matriz)
+      (click num matriz movs)
          )) 
    ))
 
@@ -227,29 +227,5 @@
 ((draw-pixmap ventana) "./Imagenes/fondo.png" (make-posn 0 0))
 
 
-
-(iniciar 3 '( ( (V V V)
-                (B N Y)
-                (B N A) )
-
-              ( (B R A)
-                (V V V)
-                (Y Y Y) )
-
-              ( (B B B)
-                (B R Y)
-                (V R Y) ) 
-
-              ( (V N Y) 
-                (A A A)
-                (A A A) ) 
-
-              ( (N B R) 
-                (N B R)
-                (N V R) )
-
-              ( (R R R)
-                (Y Y A) 
-                (N N N) ) ))
 
 
