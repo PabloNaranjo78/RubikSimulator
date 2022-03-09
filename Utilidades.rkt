@@ -148,26 +148,30 @@
 
 ;Fila central(hacia la derecha) para cualquier cubo 3x3 o mayor
 (define (verificar-centro X Cubo Movs dir)
-  (cond ((and (> 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))
-                    (< X (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))))
-        (actualizar-fila Cubo (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) 1
-                         (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))) ;rotar-centro X Cubo Movs dir
+  (cond ((and (< 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))
+                    (> X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))))
+         (actualizar-fila Cubo
+                         (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))
+                         1
+                         Movs
+                         (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))      
   (else
    (esquinas X Cubo Movs dir))))
 
 ;
 (define (actualizar-fila Cubo fila cont Movs primero)
   (cond ((= cont 4)
-         (println (list cont fila primero))
-         (cambiar-fila cont fila Cubo primero)
-         (println (cambiar-fila cont fila Cubo primero))) ;cambiar-fila cont fila Cubo
+         (cambiar-fila cont fila Cubo primero))
         (else
+         (println (cambiar-fila cont fila Cubo primero))
          (actualizar-fila-aux Cubo fila cont Movs primero))))
 
 (define (actualizar-fila-aux Cubo fila cont Movs primero)
-          (actualizar-fila (cambiar-fila cont fila Cubo
-                                         (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento (+ 1 cont) Cubo)))
-                           fila (+ 1 cont) Movs primero))
+          (actualizar-fila (cambiar-fila cont
+                                         fila
+                                         Cubo
+                                         (elemento fila (elemento (+ cont 1) Cubo)))
+                           fila (+ cont 1) Movs primero))
 
 (define (cambiar-fila cara fila Cubo newfila)
   (sus cara Cubo (sus fila (elemento cara Cubo) newfila))) 
