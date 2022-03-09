@@ -3,9 +3,8 @@
 (require "Utilidades.rkt")
 (provide iniciar)
 
-
-
 (open-graphics)
+
 
 (define (obtenerColor color)
   (cond ((equal? color 'A)
@@ -60,8 +59,13 @@
 (define movX 1)
 (define movY #t)
 
-(define (iniciar num matriz movs)
-   
+(define paso 1)
+
+(define matriz '())
+
+(define (iniciar num Cubo movs)
+  (set! matriz Cubo)
+  (arranque)
   (pintarCaras matriz num)
   (repintarLineas num)
   (click num matriz movs)
@@ -73,26 +77,23 @@
     (((get-mouse-click ventana)
       (cond ((and (> ( posn-x (query-mouse-posn ventana)) 91) (> ( posn-y (query-mouse-posn ventana)) 150)
                   (< ( posn-x (query-mouse-posn ventana)) 169) (< ( posn-y (query-mouse-posn ventana)) 213))
-             (println "Update")
-             
+             (set! matriz (update num matriz (list (elemento paso movs))))
+             (set! paso (+ 1 paso))
              )
             ((and (> ( posn-x (query-mouse-posn ventana)) 156) (> ( posn-y (query-mouse-posn ventana)) 484)
                   (< ( posn-x (query-mouse-posn ventana)) 295) (< ( posn-y (query-mouse-posn ventana)) 561))
-             (println "Derecha")
-             (cond (movY (set! movX (+ movX 1)))
-                   (else (set! movX (+ movX 1)) )
+             (cond (movY (set! movX (- movX 1)))
+                   (else (set! movX (- movX 1)) )
                ) 
              )
             ((and (> ( posn-x (query-mouse-posn ventana)) 703) (> ( posn-y (query-mouse-posn ventana)) 476)
                   (< ( posn-x (query-mouse-posn ventana)) 842) (< ( posn-y (query-mouse-posn ventana)) 545))
-             (println "Izquirda")
              (cond (movY (set! movX (+ movX 1)))
                    (else (set! movX (+ movX 1)) )
                )
                                   )
             ((and (> ( posn-x (query-mouse-posn ventana)) 804) (> ( posn-y (query-mouse-posn ventana)) 230)
                   (< ( posn-x (query-mouse-posn ventana)) 940) (< ( posn-y (query-mouse-posn ventana)) 386))
-             (println "Arriba")
              (set! movY (not movY))
              ))
       (revisarPos)
@@ -162,7 +163,7 @@
         [o (in-range 0 num 1)] #:break (= o num))  
    (for ([i (in-range k (* num arista2X) (/(- arista2X arista1X) num))]
          [j (in-range m (* num arista2Y) (/(- arista2Y arista1Y) num))]
-         [n (in-range 0 num 1)] #:break (= n num) )
+         [n (in-range 0 num 1)] #:break (= n num) ) (sleep 0.03)(repintarLineas num)
     ((draw-solid-polygon ventana) (list
                                    (make-posn i j)
                                    (make-posn (+ i (/ (- arista2X arista1X) num))
@@ -184,7 +185,7 @@
         [o (in-range 0 num 1)] #:break (= o num))  
    (for ([i (in-range k (*(- arista2X arista1X) (* 2 num)) (/(- arista2X arista1X) num))]
          [j (in-range m (*(- arista2Y arista1Y) (* 2 num)) (/(- arista2Y arista1Y) num))]
-         [n (in-range 0 num 1)] #:break (= n num) ) 
+         [n (in-range 0 num 1)] #:break (= n num) ) (sleep 0.03)(repintarLineas num)
     ((draw-solid-polygon ventana) (list 
                                    (make-posn i j)
                                    (make-posn (+ i (/ (- arista2X arista1X) num))
@@ -223,8 +224,12 @@
                                    (make-posn (+ m 2) (+ j 2))
                                    (make-posn (+ k 2) (+ i 2))) (make-posn 0 0) "black")) 
 )
-(define ventana (open-viewport "Rubik Simulator" 1000 600))
-((draw-pixmap ventana) "./Imagenes/fondo.png" (make-posn 0 0))
+
+(define ventana '())
+
+(define (arranque)
+  (set! ventana (open-viewport "Rubik Simulator" 1000 600))
+  ((draw-pixmap ventana) "./Imagenes/fondo.png" (make-posn 0 0)))
 
 
 

@@ -10,3 +10,5 @@ compiled/drracket/errortrace/GUI_rkt.dep
 *.dep
 *.zo
 *.dep
+*.zo
+*.dep

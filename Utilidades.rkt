@@ -151,6 +151,7 @@
         ((or (not (list? Movs))(null? Movs))
          (display "El parametro Movs, no es una lista o esta vacia"))
         (else
+         
          (fila-col? X Cubo Movs))))
 
 ;Lee la primera intruccion en la lista de movimientos
@@ -163,7 +164,7 @@
          (tamano-cubo X Cubo Movs "C" "A"))
         ((contiene (car Movs) "C" "B")
          (tamano-cubo X Cubo Movs "C" "B"))
-        (else
+        (else 
          (display "Instruccion incorrecta"))))
 
 ;La funcion contiene verifica si es fila o columna y su direccion
