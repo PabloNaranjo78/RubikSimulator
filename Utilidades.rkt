@@ -155,13 +155,13 @@
 ;Lee la primera intruccion en la lista de movimientos
 (define (fila-col? X Cubo Movs)
   (cond ((contiene (car Movs) "F" "D")
-         (tamano-cubo X Cubo Movs "D"))
+         (tamano-cubo X Cubo Movs "F" "D"))
         ((contiene (car Movs) "F" "I")
-         (tamano-cubo X Cubo Movs "I"))
+         (tamano-cubo X Cubo Movs "F" "I"))
         ((contiene (car Movs) "C" "A")
-         (tamano-cubo X Cubo Movs "A"))
+         (tamano-cubo X Cubo Movs "C" "A"))
         ((contiene (car Movs) "C" "B")
-         (tamano-cubo X Cubo Movs "B"))
+         (tamano-cubo X Cubo Movs "C" "B"))
         (else
          (display "Instruccion incorrecta"))))
 
@@ -171,31 +171,54 @@
        (equal? comp2 (string (car(cddr(string->list(symbol->string ele))))))))
 
 ;Validacion del tamaño del cubo
-(define (tamano-cubo X Cubo Movs dir) 
+(define (tamano-cubo X Cubo Movs fil-col dir) 
   (cond ((equal? X 2)
          (esquinas X Cubo Movs dir))
         (else
-         (fil-col-central? X Cubo Movs dir))))
+         (fil-col-central? X Cubo Movs fil-col dir))))
 
 ;La funcion determina si la fila/columa que se quiere mover se ubica en el "centro" o es una "esquina"
-(define (fil-col-central? X Cubo Movs dir)
+(define (fil-col-central? X Cubo Movs fil-col dir)
   (cond ((and (< 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))
               (> X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))))
+         (fil-col-central-aux? X Cubo Movs fil-col dir))      
+        (else
+         (esquinas X Cubo Movs dir))))
+
+;Distingue entre fila o columna
+(define (fil-col-central-aux? X Cubo Movs fil-col dir)
+  (cond ((equal? fil-col "F")
          (actualizar-fila Cubo
                           (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))
                           1
                           Movs
-                          (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))      
-        (else
-         (esquinas X Cubo Movs dir))))
+                          (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))
+        ((equal? fil-col "C")
+         (actualizar-columna Cubo
+                          (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))
+                          1
+                          Movs
+                          (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))))
+
+
+
 
 ;
 (define (actualizar-fila Cubo fila cont Movs primero)
-  (cond ((= cont 4)
-         (cambiar-fila cont fila Cubo primero))
+  (cond ((equal? dir "I")
+          (cond ((= cont 4)
+                 (cambiar-fila cont fila Cubo primero))
+                (else
+                 (println (cambiar-fila cont fila Cubo primero))
+                 (actualizar-fila-aux Cubo fila cont Movs primero))))
+        ((equal? dir "D")
+          (cond ((= cont 4)
+                 (cambiar-fila cont fila Cubo primero))
+                (else
+                 (println (cambiar-fila cont fila Cubo primero))
+                 (actualizar-fila-aux Cubo fila cont Movs primero))))
         (else
-         (println (cambiar-fila cont fila Cubo primero))
-         (actualizar-fila-aux Cubo fila cont Movs primero))))
+         (display "Hubo un error"))))
 
 (define (actualizar-fila-aux Cubo fila cont Movs primero)
   (actualizar-fila (cambiar-fila cont
@@ -215,22 +238,15 @@
                 (cambiar-columna Cubo cont columna primero))
                (else
                 (println (cambiar-columna cont columna Cubo primero))
-                (actualizar-columna-aux Cubo columna cont Movs primero))))
+                (display "Rotar columna"))))
         ((equal? dir "B")
          (cond ((= cont 4)
                 (cambiar-columna Cubo cont columna primero))
                (else
                 (println (cambiar-columna cont columna Cubo primero))
-                (actualizar-columna-aux Cubo columna cont Movs primero))))
+                (display "Rotar columna"))))
         (else
          (display "Hubo un error"))))
-
-(define (actualizar-columna-aux Cubo columna cont Movs primero)
-  (display "NADA"))
-  
-
-(define (cambiar-columna Cubo cont fila primero)
-  (display "OK"))
 
 ;La funcion verifica la "esquina" y la direccion que se desea cambiar
 (define (esquinas X Cubo Movs dir)
@@ -248,13 +264,13 @@
          (actualizar-fila Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "A"))
          (println "Rotar Columnas")
-         (rotarDerechaMatriz (elemento 4 Cubo)))
+         (rotarIzquierdaMatriz (elemento 4 Cubo)))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "B"))
          (println "Rotar Columnas")
          (rotarDerechaMatriz (elemento 4 Cubo)))
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "A"))
          (println "Rotar Columnas")
-         (rotarDerechaMatriz (elemento 2 Cubo)))
+         (rotarIzquierdaMatriz (elemento 2 Cubo)))
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "B"))
          (println "Rotar Columnas")
          (rotarDerechaMatriz (elemento 2 Cubo)))
