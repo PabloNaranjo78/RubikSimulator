@@ -198,20 +198,21 @@
                           (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))
                           1
                           Movs
-                          (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))))
+                          (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir)
+         )))
 
 
 
 
 ;
 (define (actualizar-fila Cubo fila cont Movs primero cont2 dir)
-  (cond ((equal? dir "I")
+  (cond ((or (equal? dir "I") (equal? dir "A"))
          (cond ((= cont 4)
                 (cambiar-fila cont fila Cubo primero))
                (else
                 ;(println (cambiar-fila cont fila Cubo primero))
                 (actualizar-fila-aux Cubo fila cont Movs primero))))
-        ((equal? dir "D")
+        ((or (equal? dir "D") (equal? dir "B"))
          (cond ((= cont2 3)
                 ((cond ((= cont 4)
                       (cambiar-fila cont fila Cubo primero))
@@ -234,47 +235,31 @@
   (sus cara Cubo (sus fila (elemento cara Cubo) newfila)))
 
 
-(define (actualizar-columna Cubo Movs dir cont columna primero)
-  (cond ((equal? dir "A")
-         (cond ((= cont 4)
-                (cambiar-columna Cubo cont columna primero))
-               (else
-                (println (cambiar-columna cont columna Cubo primero))
-                (display "Rotar columna"))))
-        ((equal? dir "B")
-         (cond ((= cont 4)
-                (cambiar-columna Cubo cont columna primero))
-               (else
-                (println (cambiar-columna cont columna Cubo primero))
-                (display "Rotar columna"))))
-        (else
-         (display "Hubo un error"))))
-
 ;La funcion verifica la "esquina" y la direccion que se desea cambiar
 (define (esquinas X Cubo Movs dir)
   (cond ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "D"))
          (rotarDerechaMatriz (elemento 5 Cubo))
-         (actualizar-fila Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))
+         (actualizar-fila Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "I"))
          (rotarIzquierdaMatriz (elemento 5 Cubo))
-         (actualizar-fila Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))
+         (actualizar-fila Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir))
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "D"))
          (rotarDerechaMatriz (elemento 6 Cubo))
-         (actualizar-fila Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))
+         (actualizar-fila Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir))
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "I"))
          (rotarIzquierdaMatriz (elemento 6 Cubo))
-         (actualizar-fila Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))
+         (actualizar-fila Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "A"))
-         (println "Rotar Columnas")
+         (actualizar-columna Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir)
          (rotarIzquierdaMatriz (elemento 4 Cubo)))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "B"))
-         (println "Rotar Columnas")
+         (actualizar-columna Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir)
          (rotarDerechaMatriz (elemento 4 Cubo)))
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "A"))
-         (println "Rotar Columnas")
+         (actualizar-columna Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir)
          (rotarIzquierdaMatriz (elemento 2 Cubo)))
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "B"))
-         (println "Rotar Columnas")
+         (actualizar-columna Cubo X 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir)
          (rotarDerechaMatriz (elemento 2 Cubo)))
         (else
          (display "HUBO UN ERROR"))))
@@ -297,6 +282,26 @@
   (cond  ((> cont tam) '())
          (else
           (cons (elemento N (elemento cont matrix)) (subElementoN-aux matrix N (+ 1 cont) tam) ))))
+
+
+;;;;;;;;;*****************************************************************************
+(define (rotarCubo cubo)
+  (list (rotarIzquierdaMatriz(elemento 1 cubo)) (elemento 6 cubo)
+        (rotarDerechaMatriz(elemento 3 cubo))
+        (rotarDerechaMatriz(rotarDerechaMatriz(elemento 5 cubo))) (elemento 2 cubo) (rotarDerechaMatriz(rotarDerechaMatriz(elemento 4 cubo))))
+  )
+(define (revertirCubo cubo)
+  (rotarCubo(rotarCubo(rotarCubo cubo))))
+
+(define (obtenerNumero Movs)
+  (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))))
+
+(define (actualizar-columna actualizar-fila Cubo fila cont Movs primero cont2 dir)
+  (revertirCubo (actualizar-fila (rotarCubo Cubo)
+                                 (obtenerNumero Movs)
+                                 1
+                                 Movs (elemento (obtenerNumero Movs) (elemento 1(rotarCubo Cubo)) 0 dir))) )
+
 
         
   
