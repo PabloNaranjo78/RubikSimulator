@@ -192,7 +192,7 @@
                           (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))
                           1
                           Movs
-                          (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo))))
+                          (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 0 dir))
         ((equal? fil-col "C")
          (actualizar-columna Cubo
                           (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))
@@ -204,19 +204,21 @@
 
 
 ;
-(define (actualizar-fila Cubo fila cont Movs primero)
+(define (actualizar-fila Cubo fila cont Movs primero cont2 dir)
   (cond ((equal? dir "I")
-          (cond ((= cont 4)
-                 (cambiar-fila cont fila Cubo primero))
-                (else
-                 (println (cambiar-fila cont fila Cubo primero))
-                 (actualizar-fila-aux Cubo fila cont Movs primero))))
+         (cond ((= cont 4)
+                (cambiar-fila cont fila Cubo primero))
+               (else
+                ;(println (cambiar-fila cont fila Cubo primero))
+                (actualizar-fila-aux Cubo fila cont Movs primero))))
         ((equal? dir "D")
-          (cond ((= cont 4)
-                 (cambiar-fila cont fila Cubo primero))
+         (cond ((= cont2 3)
+                ((cond ((= cont 4)
+                      (cambiar-fila cont fila Cubo primero))
                 (else
-                 (println (cambiar-fila cont fila Cubo primero))
-                 (actualizar-fila-aux Cubo fila cont Movs primero))))
+                 (actualizar-fila-aux Cubo fila cont Movs primero)))))
+               (else
+                (actualizar-fila Cubo fila 1 Movs primero (+ 1 cont2) dir))))
         (else
          (display "Hubo un error"))))
 
