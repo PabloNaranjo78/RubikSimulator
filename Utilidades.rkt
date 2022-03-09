@@ -189,7 +189,8 @@
 
 ;Distingue entre fila o columna
 (define (fil-col-central-aux? X Cubo Movs fil-col dir)
-  (cond ((equal? fil-col "F")
+(cond ((or(equal? dir "I")(equal? dir "A"))
+  (cond ((equal? fil-col "F") 
          (actualizar-fila Cubo
                           (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))
                           1
@@ -202,7 +203,12 @@
                           Movs
                           (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 1 dir)
          )))
-
+  (else
+   (cond ((equal? fil-col "F")
+          (rotarDer Cubo (obtenerNumero Movs) Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) dir))
+         ((equal? fil-col "C")
+          (revertirCubo (rotarDer (rotarCubo(col-fin Cubo  (elemento 4 Cubo) 4)) (obtenerNumero Movs) Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) dir)))))))
+   
 (define (rotarDer Cubo fila Movs primero dir)
   (actualizar-fila (actualizar-fila (actualizar-fila Cubo fila 1 Movs
                                                      (elemento
@@ -273,14 +279,14 @@
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "I"))
          (actualizar-fila (col-fin Cubo (rotarDerechaMatriz (elemento 6 Cubo)) 6) (obtenerNumero Movs) 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 1 dir))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "A"))
-         (actualizar-columna (col-fin Cubo (rotarIzquierdaMatriz (elemento 2 Cubo)) 2) (obtenerNumero Movs) 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 1 dir))
+         (actualizar-columna (col-fin Cubo (rotarDerechaMatriz (elemento 2 Cubo)) 2) (obtenerNumero Movs) 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 1 dir))
         ((and (equal? 1 (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "B"))
-         (revertirCubo (rotarDer (rotarCubo(col-fin Cubo (rotarDerechaMatriz (elemento 2 Cubo)) 2)) (obtenerNumero Movs) Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) dir))
+         (revertirCubo (rotarDer (rotarCubo(col-fin Cubo (rotarIzquierdaMatriz (elemento 2 Cubo)) 2)) (obtenerNumero Movs) Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) dir))
          )
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "A"))
-         (actualizar-columna (col-fin Cubo (rotarIzquierdaMatriz (elemento 4 Cubo)) 4) (obtenerNumero Movs) 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 1 dir))
+         (actualizar-columna (col-fin Cubo (rotarDerechaMatriz (elemento 4 Cubo)) 4) (obtenerNumero Movs) 1 Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) 1 dir))
         ((and (equal? X (string->number(string (car(cdr(string->list(symbol->string (car Movs)))))))) (equal? dir "B"))
-         (revertirCubo (rotarDer (rotarCubo(col-fin Cubo (rotarDerechaMatriz (elemento 4 Cubo)) 4)) (obtenerNumero Movs) Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) dir))
+         (revertirCubo (rotarDer (rotarCubo(col-fin Cubo (rotarIzquierdaMatriz (elemento 4 Cubo)) 4)) (obtenerNumero Movs) Movs (elemento (string->number(string (car(cdr(string->list(symbol->string (car Movs))))))) (elemento 1 Cubo)) dir))
          )
    
         (else
