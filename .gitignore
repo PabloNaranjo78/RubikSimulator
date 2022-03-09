@@ -2,3 +2,7 @@
 compiled/drracket/errortrace/GUI_rkt.dep
 *.dep
 *.zo
+*.1
+Columna.bak
+*.dep
+*.zo
