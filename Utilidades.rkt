@@ -2,6 +2,8 @@
 (provide elemento)
 (provide largo)
 (provide vacio?)
+(provide rotarIzquierdaMatriz)
+(provide rotarDerechaMatriz)
 
 (define matriz '( ( (A A A)
             (A A A)
