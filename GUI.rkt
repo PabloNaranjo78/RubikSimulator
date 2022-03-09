@@ -5,7 +5,9 @@
 
 (open-graphics)
 
-
+;Obtener color: Retorna un color en inglés a partir del color en formato de letra 'X
+;Entrada: letra en formato 'X
+;Salida: Un color en inglés
 (define (obtenerColor color)
   (cond ((equal? color 'A)
          "blue")
@@ -63,6 +65,9 @@
 
 (define matriz '())
 
+;Iniciar: Inicia la interfaz gráfica y envía los parámetros a las demás funciones
+;Entrada: Tamaño del cubo/ Matriz con el Cubo/ Lista de movimientos
+
 (define (iniciar num Cubo movs)
   (set! matriz Cubo)
   (arranque)
@@ -72,13 +77,19 @@
  
   )
 
+;Click: Maneja el evento de clic dentro de la interfaz gráfica
+;Entrada: Tamaño del cubo/ Matriz con el Cubo/ Lista de movimientos
+;Salida: Un actualiza el cubo si se presiona un botón
 (define (click num matriz movs)
   (cond
     (((get-mouse-click ventana)
       (cond ((and (> ( posn-x (query-mouse-posn ventana)) 91) (> ( posn-y (query-mouse-posn ventana)) 150)
                   (< ( posn-x (query-mouse-posn ventana)) 169) (< ( posn-y (query-mouse-posn ventana)) 213))
-             (set! matriz (update num matriz (list (elemento paso movs))))
-             (set! paso (+ 1 paso))
+             (cond ((< paso (+ 1 (largo movs)))
+                    (set! matriz (update num matriz (list (elemento paso movs))))
+                     (set! paso (+ 1 paso))
+                    ))
+             
              )
             ((and (> ( posn-x (query-mouse-posn ventana)) 156) (> ( posn-y (query-mouse-posn ventana)) 484)
                   (< ( posn-x (query-mouse-posn ventana)) 295) (< ( posn-y (query-mouse-posn ventana)) 561))
@@ -98,12 +109,14 @@
              ))
       (revisarPos)
       (pintarCaras matriz num)
-      (println (list movX movY))
       (repintarLineas num)
       (click num matriz movs)
          )) 
    ))
 
+;Pintar Caras: Pinta las caras a partir de un estado del cubo, ya sea frente, lado o reverso
+;Entrada: Matriz con el cubo/ Tamaño del cub
+;Salida: Cubo pintado
 (define (pintarCaras matriz num)
   (cond ((and (= 1 movX) movY)
            (pintarCarafrente (elemento 1 matriz) num aX aY dX dY fX fY gX gY)
@@ -149,6 +162,8 @@
         
         ))
 
+;RevisarPos: Revisa que la posición del cubo siempre esté entre 1 y 4 para que vaya dando vueltas
+;Salida: en caso de que la posición sea mayor que 4 la devuelve a 1 y si es menor que uno la devuelve a 4
 (define (revisarPos)
   (cond((> movX 4)
         (set! movX 1))
@@ -156,6 +171,9 @@
         (set! movX 4))
        ))
 
+;PintarCaraFrente: pinta la cara del frente del cubo
+;Entrada: Matriz con el cubo/ Numero de caras/ Aristas del cubo
+;Salida: Pinta la cara del frente del cubo
 (define (pintarCarafrente lista num arista1X arista1Y arista2X arista2Y arista3X arista3Y arista4X arista4Y)
  
   (for ([k (in-range arista1X (* num arista2X) (/(- arista4X arista1X) num))]
@@ -178,6 +196,9 @@
     )
     )
 
+;PintarCaraArribaLado: Esta pinta la cara de arriba y la de un lado
+;Entrada: Matriz con el cubo/ Numero de caras/ Aristas del cubo
+;Salida: Cara del lado o de arriba pintada
 (define (pintarCaraArribaLado lista num arista1X arista1Y arista2X arista2Y arista3X arista3Y arista4X arista4Y)
 
   (for ([k (in-range arista1X (* num arista2X) (/(- arista4X arista1X) num))]
@@ -202,7 +223,9 @@
 
 
 
-
+;RepintarLineas: repinta las líneas negras del cubo
+;Entrada: numero de caras
+;Salida: líneas negras del cubo
 (define (repintarLineas num)
   (crearLineas num aX aY bX bY cX cY dX dY)
   (crearLineas num dX dY cX cY eX eY fX fY)
@@ -212,7 +235,8 @@
   (crearLineas num gX gY aX aY dX dY fX fY))
 
 
-
+;CrearLineas: Toma las aristas de un cuadrado y crea un área cuadriculada a partir del tamaño del cubo
+;Entrada: Tamaño del cubo/ Aristas del cuadrado
 (define (crearLineas cant arista1X arista1Y arista2X arista2Y arista3X arista3Y arista4X arista4Y)
   (for ([i (in-range arista1Y (+ (/ (/ (- arista4Y arista1Y) cant) 3) arista4Y) (/ (- arista4Y arista1Y) cant))]
         [j (in-range arista2Y (+ (/ (/ (- arista4Y arista1Y) cant) 3) arista3Y) (/ (- arista3Y arista2Y) cant))]
@@ -224,9 +248,10 @@
                                    (make-posn (+ m 2) (+ j 2))
                                    (make-posn (+ k 2) (+ i 2))) (make-posn 0 0) "black")) 
 )
-
+;Se crea la ventana
 (define ventana '())
 
+;Se envían los parámetros de la ventana para inciarla.
 (define (arranque)
   (set! ventana (open-viewport "Rubik Simulator" 1000 600))
   ((draw-pixmap ventana) "./Imagenes/fondo.png" (make-posn 0 0)))
