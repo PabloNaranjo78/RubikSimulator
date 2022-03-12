@@ -5,60 +5,6 @@
 (provide rotarIzquierdaMatriz)
 (provide rotarDerechaMatriz)
 
-(define matriz3 '( ( (A N A)
-                     (N R N)  
-                     (R V R) )
-
-                   ( (N N N)   
-                     (V V V)   
-                     (A A A) ) 
-
-                   ( (V R V)   
-                     (R N R)   
-                     (N A N) )
-
-                   ( (R R R)  
-                     (A A A)   
-                     (V V V)   
-                     ) 
-
-                   ( (B B B) 
-                     (Y Y Y) 
-                     (B B B))
-
-                   ( (Y Y Y) 
-                     (B B B) 
-                     (Y Y Y))))
-
-(define matriz4 '( ( (A A A A)
-                    (A A A A)
-                    (A A A A)
-                    (A A A A))
-
-                  ( (B B B B)
-                    (B B B B)
-                    (B B B B)
-                    (B B B B))
-
-                  ( (V V V V)
-                    (V V V V)
-                    (V V V V)
-                    (V V V V)) 
-
-                  ( (Y Y Y Y) 
-                    (Y Y Y Y)
-                    (Y Y Y Y)
-                    (Y Y Y Y)) 
-
-                  ( (R R R R) 
-                    (R R R R)
-                    (R R R R)
-                    (R R R R))
-
-                  ( (N N N N)
-                    (N N N N) 
-                    (N N N N)
-                    (N N N N) ) ))
 
 ;Descripcion: Regresa el largo de una lista
 ;Entradas: lista
